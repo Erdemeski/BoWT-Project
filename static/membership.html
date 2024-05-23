@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papers! Membership</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="visual.css" />
+</head>
+
+<body>
+    <!--     <section class="home contact">
+        <div class="content contact">
+            <h3>THIS IS YOUR <br>BOOK STORE</h3>
+            <p>
+                We are here to contact you! We look forward to hearing your questions,
+                <br>suggestions or any feedback. You can contact us directly by e-mail
+                <br>or call us for a quick and friendly response. You can also be informed
+                <br>about our new campaigns by following our social media addresses below.
+            </p>
+            <p class="contact_infos">
+                E-mail Adress:  papersbook@customer.com.tr
+                <br>Customer Service Phone Number:  +908500000000
+            </p>
+            <a href="javascript:history.back()" class="btn">Go Back to The Books</a>
+        </div>
+        <div class="contact_map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192697.88850531832!2d28.847372628072865!3d41.00546324300304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2zxLBzdGFuYnVsLCBUw7xya2l5ZQ!5e0!3m2!1str!2sde!4v1714747394529!5m2!1str!2sde" width="600" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </section> -->
+
+    <section class="membership_section">
+        <h1 class="membership_title">Papers! Membership Fee Calculator</h1>
+        <div class="memberships">
+            <div>
+                <h1>Daily</h1>
+                <p>Base Price: 10€</p>
+            </div>
+            <div>
+                <h1>Monthly</h1>
+                <p>Base Price: 8€</p>
+            </div>
+            <div>
+                <h1>Yearly</h1>
+                <p>Base Price: 6€</p>
+            </div>
+        </div>
+        <div class="membership_calculator">
+            <form id="membershipForm">
+                <div>
+                    <label for="package">Select Package:</label>
+                    <select id="package">
+                        <option value="daily">Daily</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="duration">Select Duration:</label>
+                    <input type="number" id="duration" placeholder="Enter duration">
+                </div>
+                <div>
+                    <label for="bonusPercentage">Bonus Percentage:</label>
+                    <input type="number" id="bonusPercentage" placeholder="Enter bonus %">
+                </div>
+                <button class="member_button" type="button" onclick="calculateMembershipFee()">Calculate</button>
+                <div id="result"></div>
+            </form>
+        </div>
+        <div class="member_contact">
+            <h3>Contact customer service for subscription start and payment</h3>
+            <h5>E-mail Adress: papersbook@customer.com.tr</h5>
+            <h5 style="margin-bottom: 1rem;">Customer Service Phone Number: +908500000000</h5>
+            <h5>or</h5>
+            <a href="javascript:history.back()" class="btn">Go Back to The Books</a>
+        </div>
+
+
+
+
+    </section>
+
+    <section class="footer member">
+        <div class="footer_share">
+            <a href="https://www.instagram.com/" class="bi bi-instagram"></a>
+            <a href="https://www.facebook.com/" class="bi bi-facebook"></a>
+            <a href="https://www.youtube.com/" class="bi bi-youtube"></a>
+            <a href="https://twitter.com/login" class="bi bi-twitter-x"></a>
+        </div>
+        <div class="footer_copyright">
+            <p>Papers! © 2024 All rights reserved.</p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+</head>
+<body>
+    <h1>Bookstore</h1>
+    <form id="addForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required><br><br>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required><br><br>
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" required><br><br>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody id="productList">
+            
+        </tbody>
+    </table>
+    
+    <script src="script.js"></script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Kitapci</title>
+</head>
+<body>
+  <h1>Kitaplar</h1>
+  <table id="booksTable" border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Baslik</th>
+        <th>Yazar</th>
+        <th>Yil</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Yeni Kitap Ekle</h2>
+  <form id="addBookForm">
+    <label for="title">Baslik:</label>
+    <input type="text" id="title" name="title" required><br>
+    <label for="author">Yazar:</label>
+    <input type="text" id="author" name="author" required><br>
+    <label for="year">Yil:</label>
+    <input type="number" id="year" name="year" required><br>
+    <button type="submit">Ekle</button>
+  </form>
+
+  <script src="books.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papers! Book Table</title>
+  <link rel="stylesheet" href="books.css">
+  <link rel="stylesheet" href="visual.css">
+
+</head>
+
+<body>
+  <a href="http://localhost:3000/" class="btnn" style="margin-bottom: 1rem;">Go Back to The Books</a>
+  <h2>Add New Book</h2>
+  <form id="addBookForm">
+    <label for="name">Book Name:</label>
+    <input type="text" id="name" name="name" required><br>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" required><br>
+    <label for="price">Price:</label>
+    <input type="number" step="0.01" id="price" name="price" required><br>
+    <label for="oldPrice">Old Price:</label>
+    <input type="number" step="0.01" id="oldPrice" name="oldPrice" required><br>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea><br>
+    <label for="starRate">Star Rate:</label>
+    <input type="number" step="0.1" id="starRate" name="starRate" required><br>
+    <label for="reviewCount">Review Count:</label>
+    <input type="number" id="reviewCount" name="reviewCount" required><br>
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="stock" required><br>
+    <label for="imgSource">Cover Photo of the Book:</label>
+    <input type="text" id="imgSource" name="imgSource" required><br>
+
+<!--     <input type="file" id="imgSource" name="imgSource" required><br>
+ -->
+    <label for="type">Book Type:</label>
+    <select id="type" name="type" required>
+      <option value="">choose</option>
+      <option value="NOVEL">Novel</option>
+      <option value="HISTORY">History</option>
+      <option value="JUVENILE">Juvenile</option>SELFIMPROVEMENT
+      <option value="SELFIMPROVEMENT">Self Development</option>
+      <option value="SCIENCE">Science</option>
+    </select><br>
+    <button type="submit">Save and Add</button>
+  </form>
+
+  <h1 style="margin-top: 1rem;">Books</h1>
+  <table id="booksTable" border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Book Name</th>
+        <th>Author</th>
+        <th>Price</th>
+        <th>Old Price</th>
+        <th>Description</th>
+        <th>Star Rate</th>
+        <th>Review Count</th>
+        <th>Stock</th>
+        <th>Cover</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <section class="footer about books">
+    <div class="footer_share">
+      <a href="https://www.instagram.com/" class="bi bi-instagram"></a>
+      <a href="https://www.facebook.com/" class="bi bi-facebook"></a>
+      <a href="https://www.youtube.com/" class="bi bi-youtube"></a>
+      <a href="https://twitter.com/login" class="bi bi-twitter-x"></a>
+    </div>
+    <div class="footer_copyright">
+      <p>Papers! © 2024 All rights reserved.</p>
+    </div>
+  </section>
+
+
+  <script src="books.js"></script>
+</body>
+
+</html>
