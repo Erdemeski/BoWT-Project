@@ -63,7 +63,7 @@
           books.forEach(book => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${book.id}</td>
+             <td>${book.id}</td>
               <td>${book.name}</td>
               <td>${book.author}</td>
               <td>${book.price}</td>
@@ -74,7 +74,7 @@
               <td>${book.stock}</td>
               <td><img src="${book.imgSource}" alt="${book.name}" width="50"></td>
               <td>${book.type}</td>
-            `;
+            `; 
             booksTableBody.appendChild(row);
           });
         });

@@ -3,9 +3,53 @@ const path = require("path");
 const collection = require("./config");
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
-
 const app = express();
+const mysql = require('mysql2'); // mysql included.
 
+
+const db = mysql.createConnection({   // database connection.
+    host: "localhost",
+    user: "root",
+    password: "2003",
+    database: "bookdb"
+})
+
+db.connect((error) => {
+    if (error) throw error;
+    console.log("Connected.");
+});
+
+app.get("/boooks", (req,res)=> {
+    const sql = "SELECT * from Books";
+    db.query(sql, (err,data)=> {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.get("/orders", (req,res)=> {
+    const sql = "SELECT * from Orders";
+    db.query(sql, (err,data)=> {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.get("/employers", (req,res)=> {
+    const sql = "SELECT * from Employers";
+    db.query(sql, (err,data)=> {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.get("/subs", (req,res)=> {
+    const sql = "SELECT * from Subscriptions";
+    db.query(sql, (err,data)=> {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
 
 app.use(express.json());
 
@@ -138,9 +182,21 @@ const booksFilePath = path.join(__dirname, './static/products.json');
 
 // Kitapları oku
 function readBooksFile() {
+return new Promise((resolve, reject) => {
+    // Veritabanından kitapları seç
+    connection.query('SELECT * FROM books', (err, results) => {
+      if (err) {
+        return reject(err); // Hata varsa reddet
+      }
+      resolve(results); // Verileri döndür
+    });
+  });
+}
+
+/* function readBooksFile() {
   const data = fs.readFileSync(booksFilePath);
   return JSON.parse(data);
-}
+} */
 
 // Kitapları yaz
 function writeBooksFile(books) {
@@ -150,9 +206,14 @@ function writeBooksFile(books) {
 
 
 // Tüm kitapları getir
-app.get('/books', (req, res) => {
-  const books = readBooksFile();
+app.get('/books', async (req, res) => {
+    try {
+  const books = await readBooksFile();
   res.json(books);
+} catch (error) { 
+    console.error("Hata: ", error.message)
+    res.status(500).json({error: "There's something wrong."})
+}
 });
 
 // Yeni kitap ekle
@@ -164,9 +225,6 @@ app.post('/books', (req, res) => {
   writeBooksFile(books);
   res.status(201).json(newBook);
 });
-
-
-
 
 
 
