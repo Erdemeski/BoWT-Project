@@ -20,8 +20,6 @@
       <li class="active"><a class="menu_mid" href="http://localhost:3000">Home</a></li>
       <li><a class="menu_mid" href="audiobooks.html">AUDIOBOOKS</a></li>
       <li><a class="menu_mid" href="about.html">About</a></li>
-      <li><a class="menu_mid" href="contact.html">Contact</a></li>
-      <li><a class="menu_mid" href="books.html">Books</a></li>
     </ul>
     <ul class="menu_icons">
       <li><i class="bi bi-search" id="menu_search_btn"></i></li>
@@ -52,9 +50,6 @@
         <br>from A to Z at the most
         <br>advantageous prices.
       </p>
-      <h4 class="countdown">For advantageous prices waiting for you:</h4>
-      <div id="datetime"></div>
-      <div class="countdown" id="countdown"></div>
       <a href="#" id="scrollButton" class="btn">Look At The Books</a>
     </div>
 
@@ -107,17 +102,20 @@
   <div class="basket_modal">
     <div class="basket_items">
       <i class="bi bi-x" onclick="toggleModal()"></i>
-      <h2 class="basket_title">Your Items</h2>
-      <ul class="basket_list">
-        <li class="basket_item">
-          There is no item to buy.
-        </li>
-      </ul>
-      <div class="basket_total">
+      <h2 class="basket_title">Please signin to give an order!</h2>
+      <form action="checkout" class="basket_total">
         <span class="fw-bold fs-5 total_price"></span>
         <button class="btn_book">CHECKOUT</button>
+      </form>
+      <!--       <ul class="basket_list">
+              <li class="basket_item">
+                There is no item to buy.
+              </li>
+            </ul>
+      -->
+      <!--       <div class="basket_total">
       </div>
-
+      -->
 
     </div>
   </div>

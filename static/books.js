@@ -1,116 +1,71 @@
-/* document.addEventListener('DOMContentLoaded', function () {
-    const booksTableBody = document.querySelector('#booksTable tbody');
-    const addBookForm = document.getElementById('addBookForm');
-  
-    // Kitapları yükle ve tabloya ekle
-    function loadBooks() {
-      fetch('/books')
-        .then(response => response.json())
-        .then(books => {
-          booksTableBody.innerHTML = '';
-          books.forEach(book => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${book.id}</td>
-              <td>${book.title}</td>
-              <td>${book.author}</td>
-              <td>${book.year}</td>
+document.addEventListener('DOMContentLoaded', function () {
+  const booksTableBody = document.querySelector('#booksTable tbody');
+  const addBookForm = document.getElementById('addBookForm');
+
+  function loadBooks() {
+    fetch('/boooks')
+      .then(response => response.json())
+      .then(books => {
+        booksTableBody.innerHTML = '';
+        books.forEach(book => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+             <td>${book.Barcode}</td>
+              <td>${book.BName}</td>
+              <td>${book.Author}</td>
+              <td>${book.Price}</td>
+              <td>${book.OldPrice}</td>
+              <td>${book.BDescription}</td>
+              <td>${book.StarRate}</td>
+              <td>${book.ReviewCount}</td>
+              <td>${book.Stock}</td>
+              <td><img src="${book.ImgSource}" alt="${book.BName}" width="50"></td>
+              <td>${book.BType}</td>
             `;
-            booksTableBody.appendChild(row);
-          });
+          booksTableBody.appendChild(row);
         });
-    }
-  
-    // Yeni kitap ekle
-    addBookForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      const formData = new FormData(addBookForm);
-      const newBook = {
-        title: formData.get('title'),
-        author: formData.get('author'),
-        year: parseInt(formData.get('year'))
-      };
-  
-      fetch('/books', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newBook)
-      })
-        .then(response => response.json())
-        .then(book => {
-          loadBooks();
-          addBookForm.reset();
-        });
-    });
-  
-    loadBooks();
-  });
-   */
+      });
+  }
 
+  addBookForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const formData = new FormData(addBookForm);
+    const newBook = {
+      Barcode: formData.get('Barcode'),
+      BName: formData.get('BName'),
+      Author: formData.get('Author'),
+      Price: parseFloat(formData.get('Price')),
+      OldPrice: parseFloat(formData.get('OldPrice')) || null,
+      BDescription: formData.get('BDescription'),
+      StarRate: parseFloat(formData.get('StarRate')),
+      ReviewCount: parseInt(formData.get('ReviewCount')),
+      Stock: parseInt(formData.get('Stock')),
+      ImgSource: formData.get('ImgSource'),
+      BType: formData.get('BType'),
+    };
 
-  document.addEventListener('DOMContentLoaded', function () {
-    const booksTableBody = document.querySelector('#booksTable tbody');
-    const addBookForm = document.getElementById('addBookForm');
-  
-    // Kitapları yükle ve tabloya ekle
-    function loadBooks() {
-      fetch('/books')
-        .then(response => response.json())
-        .then(books => {
-          booksTableBody.innerHTML = '';
-          books.forEach(book => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-             <td>${book.id}</td>
-              <td>${book.name}</td>
-              <td>${book.author}</td>
-              <td>${book.price}</td>
-              <td>${book.oldPrice}</td>
-              <td>${book.description}</td>
-              <td>${book.starRate}</td>
-              <td>${book.reviewCount}</td>
-              <td>${book.stock}</td>
-              <td><img src="${book.imgSource}" alt="${book.name}" width="50"></td>
-              <td>${book.type}</td>
-            `; 
-            booksTableBody.appendChild(row);
-          });
-        });
-    }
-  
-    // Yeni kitap ekle
-    addBookForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      const formData = new FormData(addBookForm);
-      const newBook = {
-        name: formData.get('name'),
-        author: formData.get('author'),
-        price: parseFloat(formData.get('price')),
-        oldPrice: parseFloat(formData.get('oldPrice')),
-        description: formData.get('description'),
-        starRate: parseFloat(formData.get('starRate')),
-        reviewCount: parseInt(formData.get('reviewCount')),
-        stock: parseInt(formData.get('stock')),
-        imgSource: formData.get('imgSource'),
-        type: formData.get('type')
-      };
-  
-      fetch('/books', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newBook)
+    fetch('/addBook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newBook),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to add book');
+        }
+        return response.json();
       })
-        .then(response => response.json())
-        .then(book => {
-          loadBooks();
-          addBookForm.reset();
-        });
-    });
-  
-    loadBooks();
+      .then(() => {
+        loadBooks();
+        addBookForm.reset();
+      })
+      .catch((error) => {
+        console.error(error);
+        alert('Error adding book');
+      });
   });
-  
+
+  loadBooks();
+});

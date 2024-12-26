@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papers! Book Table</title>
+  <link rel="stylesheet" href="employees.css">
+  <link rel="stylesheet" href="visual.css">
+</head>
+
+<body>
+  <a href="/admin" class="btnn" style="margin-bottom: 1rem;">Go Back to The Panel</a>
+  <h1 style="margin-top: 1rem;">Employees</h1>
+
+  <form id="addEmployeeForm">
+    <label for="id">Employee ID:</label>
+    <input type="text" id="Employer_Id" name="Employer_Id" required><br>
+    <label for="name">Book Name:</label>
+    <input type="text" id="Employer_Name" name="Employer_Name" required><br>
+    <label for="author">Author:</label>
+    <input type="text" id="Employer_Field" name="Employer_Field" required><br>
+
+    <button type="submit">Save and Add</button>
+  </form>
+
+
+  <table id="employeesTable" border="1">
+    <thead>
+      <tr>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Field</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <section class="footer about books">
+    <div class="footer_share">
+      <a href="https://www.instagram.com/" class="bi bi-instagram"></a>
+      <a href="https://www.facebook.com/" class="bi bi-facebook"></a>
+      <a href="https://www.youtube.com/" class="bi bi-youtube"></a>
+      <a href="https://twitter.com/login" class="bi bi-twitter-x"></a>
+    </div>
+    <div class="footer_copyright">
+      <p>Papers! © 2024 All rights reserved.</p>
+    </div>
+  </section>
+
+  <script src="employees.js"></script>
+</body>
+
+</html>
