@@ -13,11 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 subs.forEach(sub => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-             <td>${sub.Subscriber_Id}</td>
-              <td>${sub.Name_Of_The_Subscriber}</td>
-              <td>${sub.Email_Of_The_Subscriber}</td>
-              <td>${sub.Discount_Rate}</td>
-              <td>${sub.Subscribtion_Period}</td>
+             <td>${sub.SubId}</td>
+              <td>${sub.SubName}</td>
+              <td>${sub.DiscountRate}</td>
+              <td>${sub.SubPeriod}</td>
             `;
                     subsTableBody.appendChild(row);
                 });

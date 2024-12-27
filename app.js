@@ -29,6 +29,36 @@ app.get("/boooks", (req, res) => {
         return res.json(data);
     })
 })
+app.post('/addEmployee', (req, res) => {
+    const newEmployee = req.body;
+
+    // Tüm alanlar doldurulmuş mu kontrol et
+    if (
+        !newEmployee.EmployeeId ||
+        !newEmployee.EmployeeName ||
+        !newEmployee.EmployeeField
+    ) {
+        return res.status(400).send('All fields are required.');
+    }
+
+    const query =
+        'INSERT INTO employees (EmployeeId, EmployeeName, EmployeeField) VALUES (?, ?, ?)';
+    const values = [
+        newEmployee.EmployeeId,
+        newEmployee.EmployeeName, 
+        newEmployee.EmployeeField,
+    ];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error adding employee');
+        } else {
+            res.status(201).json({ ...newEmployee });
+        }
+    });
+});
+
 
 app.post('/addBook', (req, res) => {
     const newBook = req.body;
@@ -84,16 +114,24 @@ app.get("/orders", (req, res) => {
     })
 })
 
-app.get("/employers", (req, res) => {
-    const sql = "SELECT * from Employers";
+app.get("/employees", (req, res) => {
+    const sql = "SELECT * from Employees";
+    db.query(sql, (err, data) => {
+        if (err) return res.json("Error");
+        return res.json(data);         
+    })
+})
+
+app.get("/subs", (req, res) => {
+    const sql = "SELECT * from Subscriptions";
     db.query(sql, (err, data) => {
         if (err) return res.json("Error");
         return res.json(data);
     })
 })
 
-app.get("/subs", (req, res) => {
-    const sql = "SELECT * from Subscriptions";
+app.get("/feedbacks", (req, res) => {
+    const sql = "SELECT * from Contact";
     db.query(sql, (err, data) => {
         if (err) return res.json("Error");
         return res.json(data);
