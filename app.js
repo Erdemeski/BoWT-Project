@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require("path");
-const collection = require("./config");
+const connection = require("./config");
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const app = express();
@@ -13,6 +13,7 @@ app.use(express.static('public'));
 const db = mysql.createConnection({   // database connection.
     host: "localhost",
     user: "root",
+    password: "",
     database: "bookdb"
 })
 
@@ -132,7 +133,7 @@ app.get("/signup", (req, res) => {
 });
 
 
-app.post("/signup", async (req, res) => {
+/* app.post("/signup", async (req, res) => {
 
     const data = {
         name: req.body.username,
@@ -164,10 +165,69 @@ app.post("/signup", async (req, res) => {
     }
 
 });
+*/
+const { addUser } = require("./config"); 
+
+app.post("/signup", async (req, res) => {
+    const data = {
+        name: req.body.username,
+        password: req.body.password,
+    }
+    const query = "SELECT * FROM users WHERE UserName = ?"
+    // Veritabanında mevcut kullanıcıyı kontrol etme
+    db.query(query, [data.name], async (err, results) => {
+        if (err) {
+            console.error("Error checking user existence", err);
+            res.status(500).send('An error occurred while checking the user.');
+            return;
+        }
+
+        if (results.length > 0) {
+            // Kullanıcı zaten var
+            res.render("nosignup");
+        } else {
+            try {
+                addUser(data.name, data.password, (err, result) => {
+                    if (err) {
+                        console.error("Error creating user", err);
+                        res.status(500).send('An error occurred during user creation.');
+                    } else {
+                        res.render("oklogin"); // Kullanıcı başarıyla oluşturuldu
+                    }
+                });
+
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('An error occurred during user creation.');
+            }
+        }
+    });
+});
 
 app.use(express.static(path.join(__dirname, 'static')));
 
-app.post("/login", async (req, res) => {
+const { loginUser } = require('./config');
+
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    loginUser(username, password, (err, user) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("An error occurred during login.");
+        }
+
+        if (!user) {
+            // Kullanıcı adı bulunamadığında
+            return res.render("nologin");
+        }
+
+        // Eğer kullanıcı bulundu ve giriş başarılıysa
+        res.sendFile(path.join(__dirname, "static", "logged.html"));
+    });
+});
+
+/* app.post("/login", async (req, res) => {
     try {
         const check = await collection.findOne({ name: req.body.username });
         if (!check) {
@@ -189,7 +249,7 @@ app.post("/login", async (req, res) => {
         res.status(500).send('An error occurred during login.');
     }
 });
-
+*/
 
 const fs = require('fs');
 
