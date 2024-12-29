@@ -13,11 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 feedbacks.forEach(feedback => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-             <td>${feedback.ContactID}</td>
-              <td>${feedback.UserID}</td>
+             <td>${feedback.ContactId}</td>
+              <td>${feedback.UserId}</td>
+            <td>${feedback.UserName}</td>
               <td>${feedback.MessageSubject}</td>
               <td>${feedback.UserMessage}</td>
-              <td>${feedback.EmployeeID}</td>
+              <td>${feedback.EmployeeId}</td>
             `;
                     feedbacksTableBody.appendChild(row);
                 });

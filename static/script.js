@@ -209,7 +209,7 @@ const increaseItemFromBasket = (bookId) => {
   }
 }
 
-function calculateMembershipFee() {
+/* function calculateMembershipFee() {
   var package = document.getElementById('package').value;
   const duration_prices = {
     daily: 10,
@@ -232,35 +232,20 @@ function calculateMembershipFee() {
   var resultElement = document.getElementById('result');
   resultElement.innerHTML = 'Membership Fee: ' + membershipFee.toFixed(2) + '€';
 }
-
+ */
 
 
 
 function validateForm() {
-  var name = document.getElementById('name').value.trim();
-  var email = document.getElementById('email').value.trim();
-  var message = document.getElementById('message').value.trim();
+  var MessageSubject = document.getElementById('MessageSubject').value.trim();
+  var UserMessage = document.getElementById('UserMessage').value.trim();
   var errorMessages = [];
 
-  if (name.length < 3) {
-    errorMessages.push('Please enter a name with at least 3 characters.');
+  if (MessageSubject === '') {
+    errorMessages.push('Please choose a subject.');
   }
 
-  if (message.length < 10) {
-    errorMessages.push('Please enter a message with at least 10 characters.');
-  }
-
-  if (name === '') {
-    errorMessages.push('Please enter your name.');
-  }
-
-  if (email === '') {
-    errorMessages.push('Please enter your email address.');
-  } else if (!isValidEmail(email)) {
-    errorMessages.push('Please enter a valid email address.');
-  }
-
-  if (message === '') {
+  if (UserMessage === '') {
     errorMessages.push('Please enter your message.');
   }
 
@@ -269,13 +254,57 @@ function validateForm() {
   } else {
     document.getElementById('contactForm').submit();
   }
+
+  fetch('/getCurrentUserId') // This endpoint should return the UserId of the current user
+    .then(response => response.json())
+    .then(data => {
+      const userId = data.UserId;
+      const userName = data.UserName;
+      const employeeId = null;
+
+      console.log(data.UserId);
+
+      if (!userId) {
+        console.log('User not found. Please log in again.');
+        return;
+      }
+
+      // Submit form data via POST request
+      fetch('/submitContact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          UserId: userId,
+          UserName: userName,
+          UserMessage: UserMessage,
+          EmployeeId: employeeId,
+          MessageSubject: MessageSubject
+        })
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Your message has been submitted successfully.');
+            document.getElementById('contactForm').reset();
+          } else {
+            console.log('Failed to submit your message. Please try again later.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    })
+    .catch(error => {
+      console.error('Error fetching user ID:', error);
+    });
 }
 
-function isValidEmail(email) {
+/* function isValidEmail(email) {
   var emailRegex = /\S+@\S+\.\S+/;
   return emailRegex.test(email);
 }
-
+ */
 function displayErrors(errors) {
   var errorMessagesElement = document.getElementById('errorMessages');
   errorMessagesElement.innerHTML = '';

@@ -14,12 +14,17 @@
   <h1 style="margin-top: 1rem;">Employees</h1>
 
   <form id="addEmployeeForm">
-    <label for="id">Employee ID:</label>
+    <label for="EmployeeId">Employee ID:</label>
     <input type="text" id="EmployeeId" name="EmployeeId" required><br>
-    <label for="name">Employee Name:</label>
+    <label for="EmployeeName">Employee Name:</label>
     <input type="text" id="EmployeeName" name="EmployeeName" required><br>
-    <label for="author">Field:</label>
-    <input type="text" id="EmployeeField" name="EmployeeField" required><br>
+    <label for="EmployeeField">Field:</label>
+    <select id="EmployeeField" name="EmployeeField" required>
+      <option value="">Choose</option>
+      <option value="COMPLAINT">Complaint</option>
+      <option value="THANK">Thank</option>
+      <option value="WISH">Wish</option>
+    </select><br>
 
     <button type="submit">Save and Add</button>
   </form>

@@ -45,7 +45,7 @@ app.post('/addEmployee', (req, res) => {
         'INSERT INTO employees (EmployeeId, EmployeeName, EmployeeField) VALUES (?, ?, ?)';
     const values = [
         newEmployee.EmployeeId,
-        newEmployee.EmployeeName, 
+        newEmployee.EmployeeName,
         newEmployee.EmployeeField,
     ];
 
@@ -118,7 +118,7 @@ app.get("/employees", (req, res) => {
     const sql = "SELECT * from Employees";
     db.query(sql, (err, data) => {
         if (err) return res.json("Error");
-        return res.json(data);         
+        return res.json(data);
     })
 })
 
@@ -137,6 +137,29 @@ app.get("/feedbacks", (req, res) => {
         return res.json(data);
     })
 })
+
+app.post('/submitContact', (req, res) => {
+    const { UserId, UserName, UserMessage, EmployeeId, MessageSubject } = req.body;
+
+    const query = `INSERT INTO contact (UserId, UserName, UserMessage, EmployeeId, MessageSubject) VALUES (?, ?, ?, ?, ?)`;
+    db.query(query, [UserId, UserName, UserMessage, EmployeeId, MessageSubject], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.json({ success: true });
+        console.log(results);
+    });
+});
+
+app.get("/getCurrentUserId", (req, res) => {
+    const sql = "SELECT UserId, UserName FROM currentUsers LIMIT 1";
+    db.query(sql, (err, data) => {
+        if (err) return res.json({ error: "Error" });
+        if (data.length === 0) {
+            return res.json({ error: "No user found" });
+        }
+        return res.json(data[0]);
+    });
+});
 
 app.use(express.json());
 
@@ -204,7 +227,7 @@ app.get("/signup", (req, res) => {
 
 });
 */
-const { addUser } = require("./config"); 
+const { addUser } = require("./config");
 
 app.post("/signup", async (req, res) => {
     const data = {
@@ -260,11 +283,46 @@ app.post("/login", (req, res) => {
             return res.render("nologin");
         }
 
-        // Eğer kullanıcı bulundu ve giriş başarılıysa
-        res.sendFile(path.join(__dirname, "static", "logged.html"));
+        const userid = user.UserId;
+
+        const querylogout = 'DELETE FROM currentusers';
+
+        db.query(querylogout, (err, result) => {
+            if (err) {
+                console.error("Error deleting current users:", err);
+                return res.status(500).send("An error occurred while logging out.");
+            }
+
+            console.log("All rows successfully deleted from currentusers table.");
+        });
+
+        const query = 'INSERT INTO currentusers (UserId, UserName, UserPassword) VALUES (? ,?, ?)';
+        db.query(query, [userid, username, password], (err) => {
+            if (err) {
+                console.error("Database insertion error:", err);
+                return res.status(500).send("An error occurred while saving the user data.");
+            };
+
+            console.log("User data successfully saved to currentusers table.");
+            res.sendFile(path.join(__dirname, "static", "logged.html"));
+        });
+
     });
 });
 
+/* app.post("/logout", (req, res) => {
+    const query = 'DELETE FROM currentusers';
+
+    db.query(query, (err, result) => {
+        if (err) {
+            console.error("Error deleting current users:", err);
+            return res.status(500).send("An error occurred while logging out.");
+        }
+
+        console.log("All rows successfully deleted from currentusers table.");
+    });
+});
+ */
 /* app.post("/login", async (req, res) => {
     try {
         const check = await collection.findOne({ name: req.body.username });
