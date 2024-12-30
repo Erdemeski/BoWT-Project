@@ -21,11 +21,45 @@ document.addEventListener('DOMContentLoaded', function () {
               <td>${book.Stock}</td>
               <td><img src="${book.ImgSource}" alt="${book.BName}" width="50"></td>
               <td>${book.BType}</td>
+              <td><button style="background-color: lightpink;" class="delete-btn" data-barcode="${book.Barcode}">Delete</button></td>
             `;
           booksTableBody.appendChild(row);
         });
+
+        // Tablodaki tüm silme butonlarını seç ve olay dinleyicisi ekle
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', handleDeleteBook);
+        });
       });
   }
+
+  function handleDeleteBook(event) {
+    const barcode = event.target.dataset.barcode; // Butondaki data-barcode değerini al
+    if (confirm(`Kitap silinsin mi? (Barcode: ${barcode})`)) {
+      fetch(`/deletebook/${barcode}`, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Silme işlemi başarısız.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            alert('Kitap başarıyla silindi.');
+            loadBooks(); // Tabloyu güncelle
+          } else {
+            alert('Kitap silinirken bir sorun oluştu.');
+          }
+        })
+        .catch(err => {
+          console.error('Error deleting book:', err);
+          alert('Bir hata oluştu.');
+        });
+    }
+  }
+
 
   addBookForm.addEventListener('submit', function (event) {
     event.preventDefault();

@@ -9,13 +9,72 @@ const toggleModal = () => {
 };
 
 
-const getBooks = () => {
+/* const getBooks = () => {
   fetch("products.json")
     .then((res) => res.json())
     .then((books) => (bookList = books));
 };
 
 getBooks();
+ */
+
+
+const getBooks = () => {
+  fetch("/books") // Backend API endpoint
+    .then((res) => res.json())
+
+    .then((books) => {
+      bookList = books.map(book => ({
+        id: book.id,
+        name: book.name,
+        author: book.author,
+        description: book.description,
+        type: book.type,
+        starRate: book.starRate,
+        reviewCount: book.reviewCount,
+        stock: book.stock,
+        price: book.price,
+        oldPrice: book.oldPrice,
+        imgSource: book.imgSource,
+      }))
+      console.log(bookList);
+      createBookItemsHtml(); // Kitap listesini oluştur
+    })
+    /*     .then((books) => {
+            bookList = books;
+            createBookItemsHtml(); // Veriler çekildikten sonra kitapları oluştur
+          })
+     */
+    .catch((err) => console.error("Error fetching books:", err));
+};
+getBooks();
+
+
+
+/* const getBooks = () => {
+  fetch("/boooks")
+    .then((res) => res.json())
+    .then((books) => {
+      bookList = books.map(book => ({
+        id: book.Barcode,
+        name: book.BName,
+        author: book.Author,
+        description: book.BDescription,
+        type: book.BType,
+        starRate: book.StarRate,
+        reviewCount: book.ReviewCount,
+        stock: book.Stock,
+        price: book.Price,
+        oldPrice: book.OldPrice,
+        imgSource: book.ImgSource,
+      }));
+      createBookItemsHtml(); // Kitap listesini oluştur
+    })
+    .catch((error) => console.error("Error fetching books:", error));
+};
+getBooks();
+ */
+
 
 const createBookStars = (starRate) => {
   let starRateHtml = "";
@@ -98,7 +157,11 @@ accountBtn.addEventListener("click", function () {
   });
 });
 
-const BOOK_TYPES = {
+
+
+
+/*
+ const BOOK_TYPES = {
   ALL: "ALL BOOKS",
   NOVEL: "Novel",
   SCIENCE: "Science",
@@ -134,6 +197,99 @@ const filterBooks = (filterElement) => {
     bookList = bookList.filter((book) => book.type == bookType);
   createBookItemsHtml();
 };
+ */
+
+
+const BOOK_TYPES = {
+  ALL: "ALL BOOKS",
+  NOVEL: "Novel",
+  SCIENCE: "Science",
+  JUVENILE: "Juvenile",
+  SELFIMPROVEMENT: "Self Development",
+  HISTORY: "History"
+};
+
+// Kitap türlerini oluşturma
+const createBookTypesHtml = () => {
+  const filterElement = document.querySelector(".filter");
+  let filterHtml = "";
+
+  // Tüm türleri bir diziye ekle
+  let filterTypes = ["ALL"];
+  bookList.forEach((book) => {
+    if (!filterTypes.includes(book.type)) {
+      filterTypes.push(book.type); // Eğer tür listede yoksa ekle
+    }
+  });
+
+  // Türleri liste öğesi olarak ekle
+  filterTypes.forEach((type, index) => {
+    filterHtml += `<li class="${index === 0 ? "active" : ""}" onclick="filterBooks(this)" data-type="${type}">
+      ${BOOK_TYPES[type] || type}
+    </li>`;
+  });
+
+  filterElement.innerHTML = filterHtml; // HTML'i güncelle
+};
+
+// Kitapları filtreleme
+const filterBooks = (filterElement) => {
+  // Aktif filtre öğesini güncelle
+  document.querySelector(".filter .active").classList.remove("active");
+  filterElement.classList.add("active");
+
+  const bookType = filterElement.dataset.type;
+
+  // Filtreye göre kitapları yeniden yükle
+  if (bookType === "ALL") {
+    createBookItemsHtml(); // Tüm kitapları göster
+  } else {
+    const filteredBooks = bookList.filter((book) => book.type === bookType);
+    createFilteredBookItemsHtml(filteredBooks);
+  }
+};
+
+// Filtrelenmiş kitapları oluşturma (createBookItemsHtml'den bağımsız)
+const createFilteredBookItemsHtml = (filteredBooks) => {
+  const bookListElement = document.querySelector(".book_list");
+  let bookListHtml = "";
+
+  filteredBooks.forEach((book, index) => {
+    bookListHtml += `<div class="col-5 ${index % 2 === 0 ? "offset-2" : ""} my-5">
+        <div class="row book_card">
+          <div class="col-6">
+            <img class="img-fluid shadow" src="${book.imgSource}" width="258" height="400">
+          </div>
+          <div class="col-6 d-flex flex-column justify-content-between">
+            <div class="book_detail">
+              <span class="fos gray fs-5">${book.author}</span><br>
+              <span class="fs-4 fw-bold">${book.name}</span><br>
+              <span class="book_star-rate">
+                ${createBookStars(book.starRate)}
+                <span class="gray">${book.reviewCount} reviews</span>
+              </span>
+            </div>
+            <p class="book_description gray fos">
+              ${book.description}
+            </p>
+            <div>
+              <span class="black fw-bold fs-4 me-2">${book.price}€</span>
+              ${book.oldPrice ? `<span class="gray fs-4 fw-bold old_price">${book.oldPrice}€</span>` : ""}
+            </div>
+            <button class="btn_book" onclick="addBookToBasket(${book.id})">ADD BASKET</button>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  bookListElement.innerHTML = bookListHtml; // HTML'i güncelle
+};
+
+// Kitapları getirdikten sonra türleri oluştur
+getBooks();
+createBookTypesHtml();
+
+
 
 const listBasketItems = () => {
   const basketListElement = document.querySelector(".basket_list");
@@ -368,11 +524,33 @@ function displayErrors(errors) {
 }
 
 
+/* document.addEventListener('DOMContentLoaded', function () {
+  // Product loading
+  fetch('/boooks') // Backend API'den ürünleri al
+    .then(response => response.json()) // JSON'u parse et
+    .then(data => {
+      // Başarılı bir şekilde veri alındığında, ürünleri tabloya ekle
+      const productList = document.getElementById('productList');
+      data.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+                  <td>${product.id}</td>
+                  <td>${product.name}</td>
+                  <td>${product.author}</td>
+                  <td>${product.price}€</td>
+                  <td>${product.stock}</td>
+              `;
+        productList.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error fetching products:', error));
 
 
+});
+ */
 
 
-document.addEventListener('DOMContentLoaded', function () {
+/* document.addEventListener('DOMContentLoaded', function () {
   // Product loading
   fetch('books.json') // JSON dosyasını al
     .then(response => response.json()) // JSON'u parse et
@@ -391,7 +569,9 @@ document.addEventListener('DOMContentLoaded', function () {
         productList.appendChild(row);
       });
     });
+ */
 
+/* 
   // Product adding
   const addForm = document.getElementById('addForm');
   addForm.addEventListener('submit', function (event) {
@@ -401,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.forEach((value, key) => {
       newProduct[key] = value;
     });
-
+ 
     // Yeni ürünü sunucuya POST isteği ile gönder
     fetch('addProduct', {
       method: 'POST',
@@ -429,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   });
 });
-
+ */
 
 
 
