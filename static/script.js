@@ -408,6 +408,83 @@ const increaseItemFromBasket = (bookId) => {
   }
 }
 
+
+
+// Sepeti veritabanına kaydetme fonksiyonu
+const checkout = async () => {
+  try {
+    // Kullanıcı bilgilerini al
+    const userResponse = await fetch('/getCurrentUserId');
+    if (!userResponse.ok) {
+      alert('An error occurred while fetching user data. Please try again.');
+      return;
+    }
+    const userData = await userResponse.json();
+    const UserId = userData.UserId;
+    const UserName = userData.UserName;
+
+    // DiscountCheck kontrolü
+    const subscriptionResponse = await fetch(`/checkSubscription/${UserId}`);
+    if (!subscriptionResponse.ok) {
+      alert('An error occurred while checking subscription status. Please try again.');
+      return;
+    }
+    const isSubscribed = await subscriptionResponse.json();
+    const DiscountCheck = !isSubscribed; // Abone değilse indirim aktif
+
+    // Sipariş tarihini al
+    const OrderDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    // Sepetteki her bir ürün için siparişi gönder
+    for (const item of basketList) {
+      const orderData = {
+        Barcode: item.product.id,
+        BName: item.product.name,
+        UserId,
+        UserName,
+        OrderDate,
+        DiscountCheck,
+        OrderQuantity: item.quantity,
+        TotalAmount: item.product.price * item.quantity
+      };
+
+      const orderResponse = await fetch('/addOrder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      if (!orderResponse.ok) {
+        alert('An error occurred while placing your order. Please try again.');
+        return;
+      }
+    }
+
+    // Sipariş başarıyla tamamlandığında kullanıcıya bilgi ver
+    alert('Your order has been successfully placed!');
+    basketList = []; // Sepeti temizle
+    listBasketItems(); // Sepet listesini güncelle
+  } catch (error) {
+    console.error('Checkout error:', error);
+    alert('An error occurred while placing your order. Please try again.');
+  }
+};
+
+// Checkout butonuna tıklama olayını bağla
+document.querySelector('.btn_book').addEventListener('click', async (e) => {
+  e.preventDefault(); // Formun sayfayı yenilemesini engelle
+  if (basketList.length > 0) {
+    await checkout();
+  } else {
+    alert('Your basket is empty.');
+  }
+});
+
+
+
+
 function calculateMembershipFee() {
   var package = document.getElementById('package').value;
   const duration_prices = {

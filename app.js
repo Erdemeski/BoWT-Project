@@ -100,6 +100,55 @@ app.get("/books/types", (req, res) => {
 
 
 
+// /checkSubscription/:UserId endpoint'i
+app.get('/checkSubscription/:UserId', (req, res) => {
+    const { UserId } = req.params;
+
+    // Kullanıcının abonelik durumunu kontrol et
+    const query = `SELECT * FROM subscriptions WHERE SubId = ?`;
+    db.query(query, [UserId], (err, results) => {
+        if (err) {
+            console.error('Error while checking subscription:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        // Sonuçlara göre true (abonelik yok) veya false (abonelik var) döndür
+        if (results.length === 0) {
+            res.json(true); // Abonelik yok
+        } else {
+            res.json(false); // Abonelik var
+        }
+    });
+});
+
+
+// /addOrder endpoint'i
+app.post('/addOrder', (req, res) => {
+    const { Barcode, BName, UserId, UserName, OrderDate, DiscountCheck, OrderQuantity, TotalAmount } = req.body;
+
+    // Gelen verilerin doğruluğunu kontrol et
+    if (!Barcode || !BName || !UserId || !UserName || !OrderDate || DiscountCheck === undefined || !OrderQuantity || !TotalAmount) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Sipariş verilerini veritabanına ekle
+    const query = `
+      INSERT INTO orders (Barcode, BName, UserId, UserName, OrderDate, DiscountCheck, OrderQuantity, TotalAmount)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [Barcode, BName, UserId, UserName, OrderDate, DiscountCheck, OrderQuantity, TotalAmount];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error('Error while adding order:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.status(201).json({ message: 'Order added successfully', orderId: result.insertId });
+    });
+});
+
+
+
 app.post('/addEmployee', (req, res) => {
     const newEmployee = req.body;
 
