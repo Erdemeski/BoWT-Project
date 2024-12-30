@@ -209,7 +209,7 @@ const increaseItemFromBasket = (bookId) => {
   }
 }
 
-/* function calculateMembershipFee() {
+ function calculateMembershipFee() {
   var package = document.getElementById('package').value;
   const duration_prices = {
     daily: 10,
@@ -222,17 +222,68 @@ const increaseItemFromBasket = (bookId) => {
 
   var membershipFee;
   if (package === 'daily') {
+    duration = 1*duration;
     membershipFee = price * duration * (1 + (bonusPercentage / 100));
   } else if (package === 'monthly') {
+    duration = 30*duration;
     membershipFee = price * duration * 30 * (1 + (bonusPercentage / 100));
   } else if (package === 'yearly') {
+    duration = 365*duration;
     membershipFee = price * duration * 365 * (1 + (bonusPercentage / 100));
   }
 
   var resultElement = document.getElementById('result');
   resultElement.innerHTML = 'Membership Fee: ' + membershipFee.toFixed(2) + '€';
+ 
+  fetch('/getCurrentUserId') // This endpoint should return the UserId of the current user
+  .then(response => response.json())
+  .then(data => {
+    const subId = data.UserId;
+    const subName = data.UserName;
+    const discountRate = bonusPercentage;
+    const subPeriod = duration;
+
+    console.log(data.UserId);
+    console.log(data.UserName);
+    console.log(duration);
+    console.log(bonusPercentage);
+
+    if (!subId) {
+      console.log('User not found. Please log in again.');
+      return;
+    }
+
+    // Submit form data via POST request
+    fetch('/postSubscription', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        SubId: subId,
+        SubName: subName,
+        DiscountRate: discountRate,
+        SubPeriod: subPeriod,
+      })
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('You has subscribed successfully.');
+          document.getElementById('membershipForm').reset();
+        } else {
+          console.log('Failed to subscription. Please try again later.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  })
+  .catch(error => {
+    console.error('Error fetching user ID:', error);
+  });
+
+ 
 }
- */
 
 
 

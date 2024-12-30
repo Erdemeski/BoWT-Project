@@ -150,6 +150,19 @@ app.post('/submitContact', (req, res) => {
     });
 });
 
+app.post('/postSubscription', (req, res) => {
+    const { SubId, SubName, DiscountRate, SubPeriod} = req.body;
+
+    const query = `INSERT INTO subscriptions (SubId, SubName, DiscountRate, SubPeriod) VALUES (?, ?, ?, ?)`;
+    db.query(query, [SubId, SubName, DiscountRate, SubPeriod], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.json({ success: true });
+        console.log(results);
+    });
+});
+
+
 app.get("/getCurrentUserId", (req, res) => {
     const sql = "SELECT UserId, UserName FROM currentUsers LIMIT 1";
     db.query(sql, (err, data) => {
