@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 orders.forEach(order => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
+                    <td>${order.OrderId}</td>
+                    <td>${order.OrderDate}</td>
              <td>${order.Barcode}</td>
               <td>${order.BName}</td>
               <td>${order.UserId}</td>
               <td>${order.UserName}</td>
-              <td>${order.OrderId}</td>
-              <td>${order.OrderDate}</td>
               <td>${order.DiscountCheck.data}</td>
               <td>${order.OrderQuantity}</td>
               <td>${order.TotalAmount}</td>

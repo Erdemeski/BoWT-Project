@@ -260,6 +260,16 @@ app.get("/orders", (req, res) => {
     })
 })
 
+app.get("/yourOrders/:UserId", (req, res) => {
+    const UserId = req.params.UserId; // UserId'yi params'dan alıyoruz
+    const sql = "SELECT * from orders WHERE UserId = ?";
+    db.query(sql, [UserId], (err, data) => {
+        if (err) return res.json({ error: "Error" });
+        return res.json(data);
+    });
+});
+
+
 app.get("/employees", (req, res) => {
     const sql = "SELECT * from Employees";
     db.query(sql, (err, data) => {
