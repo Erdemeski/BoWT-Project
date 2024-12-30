@@ -41,21 +41,21 @@ document.addEventListener('DOMContentLoaded', function () {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Silme işlemi başarısız.');
+            throw new Error('Deletion failed.');
           }
           return response.json();
         })
         .then(data => {
           if (data.success) {
-            alert('Kitap başarıyla silindi.');
+            alert('The book was deleted successfully.');
             loadBooks(); // Tabloyu güncelle
           } else {
-            alert('Kitap silinirken bir sorun oluştu.');
+            alert('There was a problem deleting the book.');
           }
         })
         .catch(err => {
           console.error('Error deleting book:', err);
-          alert('Bir hata oluştu.');
+          alert('An error occurred.');
         });
     }
   }

@@ -30,7 +30,7 @@ app.get("/boooks", (req, res) => {
     })
 });
 
-app.get('/books', (req, res) => {
+/* app.get('/books', (req, res) => {
     const query = `SELECT 
                     Barcode AS id,
                     BName AS name,
@@ -53,28 +53,48 @@ app.get('/books', (req, res) => {
         }
     });
 });
+ */
 
-app.get('/booktype/:', (req, res) => {
-    const query = `SELECT 
-                    Barcode AS id,
-                    BName AS name,
-                    Author AS author,
-                    BDescription AS description,
-                    BType AS type,
-                    StarRate AS starRate,
-                    ReviewCount AS reviewCount,
-                    Stock AS stock,
-                    Price AS price,
-                    OldPrice AS oldPrice,
-                    ImgSource AS imgSource
-                   FROM books`;
+app.get("/books", (req, res) => {
+    const { type } = req.query; // Filtre tipini alıyoruz
+    let query = `
+      SELECT 
+        Barcode AS id,
+        BName AS name,
+        Author AS author,
+        BDescription AS description,
+        BType AS type,
+        StarRate AS starRate,
+        ReviewCount AS reviewCount,
+        Stock AS stock,
+        Price AS price,
+        OldPrice AS oldPrice,
+        ImgSource AS imgSource
+      FROM books`;
 
-    db.query(query, (err, results) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(results);
+    if (type && type !== "ALL") {
+        query += ` WHERE BType = '${type}'`; // Eğer bir tür seçildiyse WHERE ekliyoruz
+    }
+
+    db.query(query, (error, results) => {
+        if (error) {
+            console.error("Error fetching books:", error);
+            return res.status(500).send("Error fetching books");
         }
+
+        res.json(results); // Kitapları JSON olarak döndürüyoruz
+    });
+});
+
+app.get("/books/types", (req, res) => {
+    db.query("SELECT DISTINCT BType FROM books", (error, results) => {
+        if (error) {
+            console.error("Error fetching book types:", error);
+            return res.status(500).send("Error fetching book types");
+        }
+
+        const types = results.map((row) => row.BType); // Türleri alıyoruz
+        res.json(types); // Türleri JSON olarak döndürüyoruz
     });
 });
 
@@ -161,14 +181,14 @@ app.delete('/deletebook/:barcode', (req, res) => {
     const { barcode } = req.params;
     const query = 'DELETE FROM books WHERE Barcode = ?';
     db.query(query, [barcode], (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: 'Book not found' });
-      }
-      res.json({ success: true });
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
+        res.json({ success: true });
     });
-  });
-  
+});
+
 
 app.get("/orders", (req, res) => {
     const sql = "SELECT * from Orders";
@@ -215,7 +235,7 @@ app.post('/submitContact', (req, res) => {
 });
 
 app.post('/postSubscription', (req, res) => {
-    const { SubId, SubName, DiscountRate, SubPeriod} = req.body;
+    const { SubId, SubName, DiscountRate, SubPeriod } = req.body;
 
     const query = `INSERT INTO subscriptions (SubId, SubName, DiscountRate, SubPeriod) VALUES (?, ?, ?, ?)`;
     db.query(query, [SubId, SubName, DiscountRate, SubPeriod], (err, results) => {

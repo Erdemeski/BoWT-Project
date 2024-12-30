@@ -669,8 +669,8 @@ section {
     justify-content: center;
     align-items: baseline;
     margin-bottom: 3rem;
-    margin-left: 8rem;
-}
+/*     margin-left: 1rem;
+ */}
 
 .membership_section .member_contact {
     display: flex;

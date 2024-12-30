@@ -209,7 +209,30 @@ const BOOK_TYPES = {
   HISTORY: "History"
 };
 
-// Kitap türlerini oluşturma
+
+const createBookTypesHtml = () => {
+  fetch("/books/types") // Türleri backend'den çek
+    .then((res) => res.json())
+    .then((filterTypes) => {
+      const filterElement = document.querySelector(".filter");
+      let filterHtml = "";
+
+      // Tüm kitapları göstermek için "ALL" seçeneğini ekle
+      filterHtml += `<li class="active" onclick="filterBooks(this)" data-type="ALL">ALL BOOKS</li>`;
+
+      filterTypes.forEach((type) => {
+        filterHtml += `<li onclick="filterBooks(this)" data-type="${type}">
+          ${BOOK_TYPES[type] || type}
+        </li>`;
+      });
+
+      filterElement.innerHTML = filterHtml; // HTML'i güncelle
+    })
+    .catch((err) => console.error("Error fetching book types:", err));
+};
+
+
+/* // Kitap türlerini oluşturma
 const createBookTypesHtml = () => {
   const filterElement = document.querySelector(".filter");
   let filterHtml = "";
@@ -231,8 +254,8 @@ const createBookTypesHtml = () => {
 
   filterElement.innerHTML = filterHtml; // HTML'i güncelle
 };
-
-// Kitapları filtreleme
+ */
+/* // Kitapları filtreleme
 const filterBooks = (filterElement) => {
   // Aktif filtre öğesini güncelle
   document.querySelector(".filter .active").classList.remove("active");
@@ -248,6 +271,25 @@ const filterBooks = (filterElement) => {
     createFilteredBookItemsHtml(filteredBooks);
   }
 };
+ */
+
+const filterBooks = (filterElement) => {
+  // Aktif filtre öğesini güncelle
+  document.querySelector(".filter .active").classList.remove("active");
+  filterElement.classList.add("active");
+
+  const bookType = filterElement.dataset.type;
+
+  // Backend'den filtrelenmiş kitapları getir
+  fetch(`/books?type=${bookType}`)
+    .then((res) => res.json())
+    .then((filteredBooks) => {
+      bookList = filteredBooks; // Gelen veriyi güncelle
+      createBookItemsHtml(); // Yeni listeyi oluştur
+    })
+    .catch((err) => console.error("Error filtering books:", err));
+};
+
 
 // Filtrelenmiş kitapları oluşturma (createBookItemsHtml'den bağımsız)
 const createFilteredBookItemsHtml = (filteredBooks) => {
@@ -317,6 +359,7 @@ const listBasketItems = () => {
   });
   basketListElement.innerHTML = basketListHtml ? basketListHtml : `<li class="basket_item">There is no item to buy.</li>`;
   totalPriceElement.innerHTML = totalPrice > 0 ? "Total: " + totalPrice.toFixed(2) + "€" : null;
+  console.log(basketList);
 };
 
 const addBookToBasket = (bookId) => {
@@ -365,7 +408,7 @@ const increaseItemFromBasket = (bookId) => {
   }
 }
 
- function calculateMembershipFee() {
+function calculateMembershipFee() {
   var package = document.getElementById('package').value;
   const duration_prices = {
     daily: 10,
@@ -378,67 +421,68 @@ const increaseItemFromBasket = (bookId) => {
 
   var membershipFee;
   if (package === 'daily') {
-    duration = 1*duration;
+    duration = 1 * duration;
     membershipFee = price * duration * (1 + (bonusPercentage / 100));
   } else if (package === 'monthly') {
-    duration = 30*duration;
+    duration = 30 * duration;
     membershipFee = price * duration * 30 * (1 + (bonusPercentage / 100));
   } else if (package === 'yearly') {
-    duration = 365*duration;
+    duration = 365 * duration;
     membershipFee = price * duration * 365 * (1 + (bonusPercentage / 100));
   }
 
   var resultElement = document.getElementById('result');
-  resultElement.innerHTML = 'Membership Fee: ' + membershipFee.toFixed(2) + '€';
- 
+  resultElement.innerHTML = 'You paid this fee and started a subscription: ' + membershipFee.toFixed(2) + '€';
+
   fetch('/getCurrentUserId') // This endpoint should return the UserId of the current user
-  .then(response => response.json())
-  .then(data => {
-    const subId = data.UserId;
-    const subName = data.UserName;
-    const discountRate = bonusPercentage;
-    const subPeriod = duration;
+    .then(response => response.json())
+    .then(data => {
+      const subId = data.UserId;
+      const subName = data.UserName;
+      const discountRate = bonusPercentage;
+      const subPeriod = duration;
 
-    console.log(data.UserId);
-    console.log(data.UserName);
-    console.log(duration);
-    console.log(bonusPercentage);
+      console.log(data.UserId);
+      console.log(data.UserName);
+      console.log(duration);
+      console.log(bonusPercentage);
 
-    if (!subId) {
-      console.log('User not found. Please log in again.');
-      return;
-    }
+      if (!subId) {
+        console.log('User not found. Please log in again.');
+        return;
+      }
 
-    // Submit form data via POST request
-    fetch('/postSubscription', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        SubId: subId,
-        SubName: subName,
-        DiscountRate: discountRate,
-        SubPeriod: subPeriod,
+      // Submit form data via POST request
+      fetch('/postSubscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          SubId: subId,
+          SubName: subName,
+          DiscountRate: discountRate,
+          SubPeriod: subPeriod,
+        })
       })
+        .then(response => {
+          if (response.ok) {
+            alert('You has subscribed successfully.');
+            document.getElementById('membershipForm').reset();
+          } else {
+            console.log('Failed to subscription. Please try again later.');
+            alert('Failed to subscription. You may already have a subscription or please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     })
-      .then(response => {
-        if (response.ok) {
-          alert('You has subscribed successfully.');
-          document.getElementById('membershipForm').reset();
-        } else {
-          console.log('Failed to subscription. Please try again later.');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  })
-  .catch(error => {
-    console.error('Error fetching user ID:', error);
-  });
+    .catch(error => {
+      console.error('Error fetching user ID:', error);
+    });
 
- 
+
 }
 
 
