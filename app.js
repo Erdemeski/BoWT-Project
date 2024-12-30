@@ -28,7 +28,58 @@ app.get("/boooks", (req, res) => {
         if (err) return res.json("Error");
         return res.json(data);
     })
-})
+});
+
+app.get('/books', (req, res) => {
+    const query = `SELECT 
+                    Barcode AS id,
+                    BName AS name,
+                    Author AS author,
+                    BDescription AS description,
+                    BType AS type,
+                    StarRate AS starRate,
+                    ReviewCount AS reviewCount,
+                    Stock AS stock,
+                    Price AS price,
+                    OldPrice AS oldPrice,
+                    ImgSource AS imgSource
+                   FROM books`;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.get('/booktype/:', (req, res) => {
+    const query = `SELECT 
+                    Barcode AS id,
+                    BName AS name,
+                    Author AS author,
+                    BDescription AS description,
+                    BType AS type,
+                    StarRate AS starRate,
+                    ReviewCount AS reviewCount,
+                    Stock AS stock,
+                    Price AS price,
+                    OldPrice AS oldPrice,
+                    ImgSource AS imgSource
+                   FROM books`;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+
+
 app.post('/addEmployee', (req, res) => {
     const newEmployee = req.body;
 
@@ -105,6 +156,19 @@ app.post('/addBook', (req, res) => {
         }
     });
 });
+
+app.delete('/deletebook/:barcode', (req, res) => {
+    const { barcode } = req.params;
+    const query = 'DELETE FROM books WHERE Barcode = ?';
+    db.query(query, [barcode], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+      res.json({ success: true });
+    });
+  });
+  
 
 app.get("/orders", (req, res) => {
     const sql = "SELECT * from Orders";
@@ -310,6 +374,9 @@ app.post("/login", (req, res) => {
     });
 });
 
+
+
+
 /* app.post("/logout", (req, res) => {
     const query = 'DELETE FROM currentusers';
 
@@ -347,6 +414,9 @@ app.post("/login", (req, res) => {
 });
 */
 
+
+
+/* 
 const fs = require('fs');
 
 
@@ -370,10 +440,10 @@ function readBooksFile() {
     });
 }
 
-/* function readBooksFile() {
+ function readBooksFile() {
   const data = fs.readFileSync(booksFilePath);
   return JSON.parse(data);
-} */
+} 
 
 // Kitapları yaz
 function writeBooksFile(books) {
@@ -402,7 +472,7 @@ app.post('/books', (req, res) => {
     writeBooksFile(books);
     res.status(201).json(newBook);
 });
-
+ */
 
 
 const port = process.env.PORT || 3000;
