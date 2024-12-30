@@ -189,7 +189,6 @@ app.post('/addBook', (req, res) => {
         !newBook.BName ||
         !newBook.Author ||
         !newBook.Price ||
-        !newBook.OldPrice ||
         !newBook.BDescription ||
         !newBook.StarRate ||
         !newBook.ReviewCount ||
@@ -207,7 +206,7 @@ app.post('/addBook', (req, res) => {
         newBook.BName,
         newBook.Author,
         newBook.Price,
-        newBook.OldPrice,
+        newBook.OldPrice || null,
         newBook.BDescription,
         newBook.StarRate,
         newBook.ReviewCount,
@@ -226,10 +225,24 @@ app.post('/addBook', (req, res) => {
     });
 });
 
-app.delete('/deletebook/:barcode', (req, res) => {
+/*  app.delete('/deletebook/:barcode', (req, res) => {
     const { barcode } = req.params;
     const query = 'DELETE FROM books WHERE Barcode = ?';
     db.query(query, [barcode], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
+        res.json({ success: true });
+    });
+}); 
+ */
+
+app.delete('/deletebook/:barcode', (req, res) => {
+    const { barcode } = req.params;
+    console.log('Received barcode:', barcode);  // Bu satırı ekleyin
+    const query = 'DELETE FROM books WHERE Barcode = ?';
+    db.query(query, barcode, (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Book not found' });

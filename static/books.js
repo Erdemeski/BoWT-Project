@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function handleDeleteBook(event) {
-    const barcode = event.target.dataset.barcode; // Butondaki data-barcode değerini al
-    if (confirm(`Kitap silinsin mi? (Barcode: ${barcode})`)) {
+    const barcode = event.target.dataset.barcode;
+    console.log('Deleting book with barcode:', barcode);  // Bu satırı ekleyin
+    if (confirm(`Do you want to delete? (Barcode: ${barcode})`)) {
       fetch(`/deletebook/${barcode}`, {
         method: 'DELETE'
       })
