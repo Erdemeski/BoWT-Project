@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <td>${book.Stock}</td>
               <td><img src="${book.ImgSource}" alt="${book.BName}" width="50"></td>
               <td>${book.BType}</td>
-              <td><button style="background-color: lightpink;" class="delete-btn" data-barcode="${book.Barcode}">Delete</button></td>
+              <td><button style="color: white; background-color:rgb(214, 48, 48); border-radius: 30px; padding: 5px;" class="delete-btn" data-barcode="${book.Barcode}">Delete</button></td>
             `;
           booksTableBody.appendChild(row);
         });

@@ -306,6 +306,26 @@ app.post('/submitContact', (req, res) => {
     });
 });
 
+app.post('/assignEmployees', (req, res) => {
+    const query = `
+        UPDATE contact
+        JOIN employees
+        ON employees.EmployeeField = contact.MessageSubject
+        SET contact.EmployeeId = employees.EmployeeId
+        WHERE employees.EmployeeField = contact.MessageSubject
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to assign employees.' });
+        }
+
+        res.json({ success: true, affectedRows: results.affectedRows });
+    });
+});
+
+
 app.post('/postSubscription', (req, res) => {
     const { SubId, SubName, DiscountRate, SubPeriod } = req.body;
 
@@ -353,6 +373,9 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'admin.html'));
 });
 
+app.get('/logged', (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', 'logged.html'));
+});
 
 app.get("/login", (req, res) => {
     res.render("login");
@@ -473,7 +496,7 @@ app.post("/login", (req, res) => {
             };
 
             console.log("User data successfully saved to currentusers table.");
-            res.sendFile(path.join(__dirname, "static", "logged.html"));
+            res.redirect("/logged");
         });
 
     });

@@ -27,3 +27,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     loadFeedBacks();
 });
+
+document.querySelector('.assign').addEventListener('click', () => {
+    fetch('/assignEmployees', {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                alert(`Employees successfully assigned to ${result.affectedRows} feedbacks.`);
+                alert(`Please refresh the page to see the IDs of assigned responsible employees.`);
+            } else {
+                alert('Failed to assign employees. Please try again.');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('An error occurred while assigning employees.');
+        });
+});

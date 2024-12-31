@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 ordersTableBody.innerHTML = '';
                 orders.forEach(order => {
                     const row = document.createElement('tr');
+                    const discountData = order.DiscountCheck.data[0]; // Buffer'daki ilk eleman
+                    const discountCellContent = discountData === 1
+                        ? '<span style="color: green;">✔</span>' // Yeşil tik işareti
+                        : '<span style="color: red;">✖</span>'; // Kırmızı çarpı işareti
                     row.innerHTML = `
                     <td>${order.OrderId}</td>
                     <td>${order.OrderDate}</td>
@@ -17,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
               <td>${order.BName}</td>
               <td>${order.UserId}</td>
               <td>${order.UserName}</td>
-              <td>${order.DiscountCheck.data}</td>
+              <td>${discountCellContent}</td>
               <td>${order.OrderQuantity}</td>
-              <td>${order.TotalAmount}</td>
+              <td>${order.TotalAmount}€</td>
             `;
                     ordersTableBody.appendChild(row);
                 });
